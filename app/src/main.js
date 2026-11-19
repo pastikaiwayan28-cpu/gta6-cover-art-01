@@ -1,5 +1,5 @@
-// Wires the page: pick photos, choose a layout, grade and size, edit the caption, click a panel
-// to select it and drag it to reposition the photo, then export the cover as a PNG.
+// Wires the page: pick photos, choose a layout, grade and size, edit the caption, click a
+// panel to select it and drag it to reposition the photo, then export the cover as a PNG.
 // A `?shot=` query sets up a fixed scene for a screenshot instead (./shots.js).
 import { drawCover, panelRects, defaultPanels, SIZES, LAYOUTS } from './cover.js';
 import { runShot } from './shots.js';
@@ -22,7 +22,7 @@ const state = {
   selected: 0,
 };
 
-/** Loads an image from a URL, resolving to the image once it can be drawn. */
+/** Loads an image from a URL, resolving once it can be drawn. */
 export function loadImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
