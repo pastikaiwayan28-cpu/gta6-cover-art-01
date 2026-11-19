@@ -18,24 +18,18 @@
 </head>
 <body>
 <main class="app">
-  <section class="controls" aria-label="Cover controls">
+  <section class="panel" aria-label="Cover controls">
     <h1>Vice Nights</h1>
     <p class="tag">Turn your photos into a multi-panel GTA-style poster cover. Photos stay on your machine — nothing is uploaded.</p>
 
     <fieldset>
       <legend>Photos</legend>
       <label>Photo A <input id="photoA" type="file" accept="image/*"></label>
-      <div class="row">
-        <button id="sampleA" type="button">Use sample: boulevard</button>
-      </div>
+      <div class="row"><button id="sampleA" type="button">Use sample: boulevard</button></div>
       <label>Photo B <input id="photoB" type="file" accept="image/*"></label>
-      <div class="row">
-        <button id="sampleB" type="button">Use sample: pier</button>
-      </div>
+      <div class="row"><button id="sampleB" type="button">Use sample: pier</button></div>
       <label>Photo C <input id="photoC" type="file" accept="image/*"></label>
-      <div class="row">
-        <button id="sampleC" type="button">Use sample: boulevard</button>
-      </div>
+      <div class="row"><button id="sampleC" type="button">Use sample: boulevard</button></div>
       <label class="check"><input id="onePhoto" type="checkbox"> One photo for all panels (Photo A)</label>
     </fieldset>
 
@@ -76,9 +70,7 @@
       <legend>Selected panel</legend>
       <p id="panelLabel">Click a panel on the cover to select it, then drag it to reposition the photo.</p>
       <label>Zoom <input id="zoom" type="range" min="1" max="2.5" step="0.05" value="1"></label>
-      <div class="row">
-        <button id="resetPanel" type="button">Reset position</button>
-      </div>
+      <div class="row"><button id="resetPanel" type="button">Reset position</button></div>
     </fieldset>
 
     <button id="export" type="button" class="primary">Export PNG</button>
@@ -87,7 +79,7 @@
   </section>
   <section class="stage">
     <canvas id="cover" width="1080" height="1080" aria-label="The cover preview"></canvas>
-    <p class="hint">Click a panel to select it. Drag inside it to move the photo. Scroll the zoom slider to zoom.</p>
+    <p class="hint">Click a panel to select it. Drag inside it to move the photo. Use the zoom slider to zoom.</p>
   </section>
 </main>
 <script type="module" src="./src/main.js"></script>
