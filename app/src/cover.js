@@ -1,6 +1,7 @@
-// Draws the multi-panel GTA-style cover: framed photo panels, a sunset or neon colour grade,
-// and the bold caption band. One function draws at any size, so the preview and the exported
-// PNG are the same picture. No Rockstar logo, artwork or font anywhere: the type is Anton (OFL).
+// Renders the multi-panel GTA-style cover: white-framed photo panels, a sunset or neon
+// colour grade washed over them, and the bold caption band along the foot. One function
+// draws at any size, so the live preview and the exported PNG are the same picture.
+// Original design: no Rockstar logo, artwork or font anywhere. The type is Anton (OFL).
 
 export const SIZES = {
   '1080x1080': [1080, 1080],
@@ -15,55 +16,77 @@ export const LAYOUTS = {
 };
 
 export const GRADES = {
-  sunset: { accent: '#ffd166', band: ['#2a1230', '#120a18'], stops: [[0, 'rgba(255,120,60,0)'], [1, 'rgba(220,40,110,0.38)']] },
-  neon: { accent: '#00e5ff', band: ['#160a2e', '#0a0616'], stops: [[0, 'rgba(0,229,255,0.10)'], [0.5, 'rgba(255,0,180,0.12)'], [1, 'rgba(255,0,180,0.30)']] },
-  vice: { accent: '#ff7ad9', band: ['#1d1030', '#0d0817'], stops: [[0, 'rgba(0,200,180,0.08)'], [1, 'rgba(120,40,200,0.32)']] },
+  sunset: {
+    accent: '#ffd166',
+    band: ['#2a1230', '#120a18'],
+    wash: [[0, 'rgba(255,120,60,0)'], [1, 'rgba(220,40,110,0.38)']],
+  },
+  neon: {
+    accent: '#00e5ff',
+    band: ['#160a2e', '#0a0616'],
+    wash: [[0, 'rgba(0,229,255,0.10)'], [0.5, 'rgba(255,0,180,0.12)'], [1, 'rgba(255,0,180,0.30)']],
+  },
+  vice: {
+    accent: '#ff7ad9',
+    band: ['#1d1030', '#0d0817'],
+    wash: [[0, 'rgba(0,200,180,0.08)'], [1, 'rgba(120,40,200,0.32)']],
+  },
 };
 
-/** Panel rectangles (fractions of the cover area above the caption band), in pixels. */
+/** The photo area: everything above the caption band, with its margin and gutter. */
+function photoArea(W, H) {
+  const bandTop = H * 0.8;
+  const margin = Math.round(Math.min(W, H) * 0.02);
+  const gap = Math.round(Math.min(W, H) * 0.012);
+  return { x: margin, y: margin, w: W - 2 * margin, h: bandTop - 2 * margin, gap, bandTop };
+}
+
+/** Panel rectangles for a layout, in pixels. */
 export function panelRects(layout, W, H) {
-  const bandH = H * 0.2;
-  const m = Math.round(Math.min(W, H) * 0.02);
-  const g = Math.round(Math.min(W, H) * 0.012);
-  const ax = m, ay = m, aw = W - 2 * m, ah = H - bandH - 2 * m;
+  const a = photoArea(W, H);
+  const g = a.gap;
   if (layout === 'grid') {
-    const w = (aw - g) / 2, h = (ah - g) / 2;
+    const w = (a.w - g) / 2;
+    const h = (a.h - g) / 2;
     return [
-      { x: ax, y: ay, w, h },
-      { x: ax + w + g, y: ay, w, h },
-      { x: ax, y: ay + h + g, w, h },
-      { x: ax + w + g, y: ay + h + g, w, h },
+      { x: a.x, y: a.y, w, h },
+      { x: a.x + w + g, y: a.y, w, h },
+      { x: a.x, y: a.y + h + g, w, h },
+      { x: a.x + w + g, y: a.y + h + g, w, h },
     ];
   }
   if (layout === 'strip') {
-    const topH = ah * 0.55 - g / 2, botH = ah * 0.45 - g / 2;
-    const w = (aw - 2 * g) / 3, y2 = ay + topH + g;
+    const topH = a.h * 0.55 - g / 2;
+    const botH = a.h * 0.45 - g / 2;
+    const w = (a.w - 2 * g) / 3;
+    const y2 = a.y + topH + g;
     return [
-      { x: ax, y: ay, w: aw, h: topH },
-      { x: ax, y: y2, w, h: botH },
-      { x: ax + w + g, y: y2, w, h: botH },
-      { x: ax + 2 * (w + g), y: y2, w, h: botH },
+      { x: a.x, y: a.y, w: a.w, h: topH },
+      { x: a.x, y: y2, w, h: botH },
+      { x: a.x + w + g, y: y2, w, h: botH },
+      { x: a.x + 2 * (w + g), y: y2, w, h: botH },
     ];
   }
-  // hero: one big panel left, two stacked right
-  const bigW = aw * 0.62 - g / 2, sideW = aw * 0.38 - g / 2;
-  const sideH = (ah - g) / 2;
+  // hero: one tall panel on the left, two stacked on the right.
+  const bigW = a.w * 0.62 - g / 2;
+  const sideW = a.w * 0.38 - g / 2;
+  const sideH = (a.h - g) / 2;
   return [
-    { x: ax, y: ay, w: bigW, h: ah },
-    { x: ax + bigW + g, y: ay, w: sideW, h: sideH },
-    { x: ax + bigW + g, y: ay + sideH + g, w: sideW, h: sideH },
+    { x: a.x, y: a.y, w: bigW, h: a.h },
+    { x: a.x + bigW + g, y: a.y, w: sideW, h: sideH },
+    { x: a.x + bigW + g, y: a.y + sideH + g, w: sideW, h: sideH },
   ];
 }
 
-/** Default photo assignment per layout (A/B/C cycle). */
+/** Default panel state for a layout: photos cycle A, B, C, A. */
 export function defaultPanels(layout) {
   const n = LAYOUTS[layout].panels;
   const cycle = ['A', 'B', 'C', 'A'];
   return Array.from({ length: n }, (_, i) => ({ photo: cycle[i], zoom: 1, dx: 0, dy: 0 }));
 }
 
-/** Draws one photo cover-fit into a panel rect, with the panel's zoom and pan. */
-function drawPhotoInto(ctx, img, rect, panel) {
+/** Draws one photo cover-fit into a panel, honouring its zoom and pan. */
+function drawPanelPhoto(ctx, img, rect, panel) {
   ctx.save();
   ctx.beginPath();
   ctx.rect(rect.x, rect.y, rect.w, rect.h);
@@ -96,7 +119,7 @@ function drawPhotoInto(ctx, img, rect, panel) {
   ctx.restore();
 }
 
-/** Fits a one-line title in Anton to maxWidth, shrinking from startSize. Returns the size used. */
+/** Shrinks a one-line Anton title until it fits maxWidth. Returns the size used. */
 function fitTitle(ctx, text, maxWidth, startSize) {
   let size = startSize;
   ctx.font = `${size}px Anton, sans-serif`;
@@ -109,23 +132,23 @@ function fitTitle(ctx, text, maxWidth, startSize) {
 
 /**
  * Draws the whole cover onto ctx at W x H.
- * state: { layout, grade, title, subtitle, photos: {A,B,C}, panels, selected }
+ * state: { layout, grade, title, subtitle, onePhoto, photos: {A,B,C}, panels, selected }
  * showSelection draws the selected panel's dashed outline (preview only, never in exports).
  */
 export function drawCover(ctx, state, W, H, showSelection = false) {
   const grade = GRADES[state.grade] || GRADES.sunset;
+  const { bandTop } = photoArea(W, H);
   ctx.fillStyle = '#140d1c';
   ctx.fillRect(0, 0, W, H);
   const rects = panelRects(state.layout, W, H);
   rects.forEach((rect, i) => {
     const panel = state.panels[i] || { photo: 'A', zoom: 1, dx: 0, dy: 0 };
     const key = state.onePhoto ? 'A' : panel.photo;
-    drawPhotoInto(ctx, state.photos[key] || null, rect, panel);
+    drawPanelPhoto(ctx, state.photos[key] || null, rect, panel);
   });
-  // Colour grade over the panels.
-  const bandTop = H * 0.8;
+  // Colour grade washed over the panels.
   const wash = ctx.createLinearGradient(0, 0, 0, bandTop);
-  for (const [stop, color] of grade.stops) wash.addColorStop(stop, color);
+  for (const [stop, color] of grade.wash) wash.addColorStop(stop, color);
   ctx.fillStyle = wash;
   ctx.fillRect(0, 0, W, bandTop);
   // White frames around the panels.
