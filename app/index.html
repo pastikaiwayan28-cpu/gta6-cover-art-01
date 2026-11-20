@@ -1,87 +1,127 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vice Nights — GTA-style cover maker</title>
-<link rel="icon" href="data:,">
-<link rel="stylesheet" href="./style.css">
-<style>
-  @font-face {
-    font-family: 'Anton';
-    src: url('./fonts/Anton-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-</style>
+<title>Vice Dusk Cover Studio — make your own sunset poster</title>
+<link rel="stylesheet" href="look.css">
 </head>
 <body>
-<main class="app">
-  <section class="panel" aria-label="Cover controls">
-    <h1>Vice Nights</h1>
-    <p class="tag">Turn your photos into a multi-panel GTA-style poster cover. Photos stay on your machine — nothing is uploaded.</p>
+<header class="topbar">
+  <div>
+    <h1>Vice Dusk Cover Studio</h1>
+    <p class="tagline">Turn your photo into a neon-sunset poster. Everything runs in your browser — photos never leave your machine.</p>
+  </div>
+  <div class="top-actions">
+    <label class="size-label" for="exportSize">Export size</label>
+    <select id="exportSize">
+      <option value="1080x1080">1080 × 1080 square</option>
+      <option value="1080x1350">1080 × 1350 portrait</option>
+      <option value="1920x1080" selected>1920 × 1080 wide</option>
+    </select>
+    <button id="downloadBtn" type="button">Download PNG</button>
+  </div>
+</header>
 
-    <fieldset>
-      <legend>Photos</legend>
-      <label>Photo A <input id="photoA" type="file" accept="image/*"></label>
-      <div class="row"><button id="sampleA" type="button">Use sample: boulevard</button></div>
-      <label>Photo B <input id="photoB" type="file" accept="image/*"></label>
-      <div class="row"><button id="sampleB" type="button">Use sample: pier</button></div>
-      <label>Photo C <input id="photoC" type="file" accept="image/*"></label>
-      <div class="row"><button id="sampleC" type="button">Use sample: boulevard</button></div>
-      <label class="check"><input id="onePhoto" type="checkbox"> One photo for all panels (Photo A)</label>
-    </fieldset>
+<main class="workspace">
+  <section class="controls" aria-label="Cover controls">
+    <h2>1 · Photos</h2>
+    <p class="hint">Pick a sample, or upload your own. Each panel can use a different photo.</p>
+    <div class="photo-row">
+      <label>Photo A <input id="uploadA" type="file" accept="image/*"></label>
+      <label>Photo B <input id="uploadB" type="file" accept="image/*"></label>
+      <label>Photo C <input id="uploadC" type="file" accept="image/*"></label>
+    </div>
+    <div class="sample-row">
+      <button id="sampleBoulevard" type="button">Load sample: Boulevard</button>
+      <button id="samplePier" type="button">Load sample: Pier</button>
+      <button id="clearPhotos" type="button">Clear uploads</button>
+    </div>
 
-    <fieldset>
-      <legend>Layout</legend>
-      <div class="row" id="layouts">
-        <button type="button" data-layout="hero" class="on">Hero</button>
-        <button type="button" data-layout="grid">Grid</button>
-        <button type="button" data-layout="strip">Strip</button>
-      </div>
-    </fieldset>
+    <h2>2 · Panels</h2>
+    <label class="field">Layout
+      <select id="layoutPick">
+        <option value="marquee" selected>Marquee — one big hero, two below</option>
+        <option value="columns">Columns — three tall panels</option>
+        <option value="duo">Duo — two panels, caption band</option>
+        <option value="solo">Solo — one full-bleed photo</option>
+      </select>
+    </label>
+    <div class="panel-grid">
+      <fieldset>
+        <legend>Hero / Panel A</legend>
+        <label>Photo <select id="slotA"></select></label>
+        <label>Zoom <input id="zoomA" type="range" min="1" max="2.5" step="0.05" value="1.15"></label>
+        <label>Shift X <input id="offXA" type="range" min="-50" max="50" step="1" value="0"></label>
+        <label>Shift Y <input id="offYA" type="range" min="-50" max="50" step="1" value="0"></label>
+      </fieldset>
+      <fieldset>
+        <legend>Panel B</legend>
+        <label>Photo <select id="slotB"></select></label>
+        <label>Zoom <input id="zoomB" type="range" min="1" max="2.5" step="0.05" value="1.1"></label>
+        <label>Shift X <input id="offXB" type="range" min="-50" max="50" step="1" value="0"></label>
+        <label>Shift Y <input id="offYB" type="range" min="-50" max="50" step="1" value="0"></label>
+      </fieldset>
+      <fieldset>
+        <legend>Panel C</legend>
+        <label>Photo <select id="slotC"></select></label>
+        <label>Zoom <input id="zoomC" type="range" min="1" max="2.5" step="0.05" value="1.1"></label>
+        <label>Shift X <input id="offXC" type="range" min="-50" max="50" step="1" value="0"></label>
+        <label>Shift Y <input id="offYC" type="range" min="-50" max="50" step="1" value="0"></label>
+      </fieldset>
+    </div>
 
-    <fieldset>
-      <legend>Colour grade</legend>
-      <div class="row" id="grades">
-        <button type="button" data-grade="sunset" class="on">Sunset</button>
-        <button type="button" data-grade="neon">Neon</button>
-        <button type="button" data-grade="vice">Vice</button>
-      </div>
-    </fieldset>
+    <h2>3 · Sunset grade</h2>
+    <div class="grade-row" id="gradeRow">
+      <button type="button" data-grade="dusk" class="grade-btn active">Vice Dusk</button>
+      <button type="button" data-grade="neon" class="grade-btn">Neon Palms</button>
+      <button type="button" data-grade="gold" class="grade-btn">Gold Hour</button>
+      <button type="button" data-grade="noir" class="grade-btn">Mono Noir</button>
+    </div>
+    <label class="field">Grade strength
+      <input id="gradeStrength" type="range" min="0" max="100" step="5" value="70">
+    </label>
 
-    <fieldset>
-      <legend>Post size</legend>
-      <div class="row" id="sizes">
-        <button type="button" data-size="1080x1080" class="on">Square 1080&times;1080</button>
-        <button type="button" data-size="1080x1350">Portrait 1080&times;1350</button>
-        <button type="button" data-size="1920x1080">Wide 1920&times;1080</button>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Caption</legend>
-      <label>Title <input id="title" type="text" maxlength="24" value="VICE NIGHTS"></label>
-      <label>Subtitle <input id="subtitle" type="text" maxlength="48" value="A SUNSET HEIST IN VICE CITY"></label>
-    </fieldset>
-
-    <fieldset>
-      <legend>Selected panel</legend>
-      <p id="panelLabel">Click a panel on the cover to select it, then drag it to reposition the photo.</p>
-      <label>Zoom <input id="zoom" type="range" min="1" max="2.5" step="0.05" value="1"></label>
-      <div class="row"><button id="resetPanel" type="button">Reset position</button></div>
-    </fieldset>
-
-    <button id="export" type="button" class="primary">Export PNG</button>
-    <p id="status" role="status"></p>
-    <p class="fine">Display type: Anton, SIL Open Font License 1.1 (see app/fonts/OFL.txt). Original design — no Rockstar logo, artwork or font.</p>
+    <h2>4 · Caption</h2>
+    <label class="field">Title
+      <input id="titleText" type="text" value="NEON SUNSET" maxlength="40">
+    </label>
+    <label class="field">Subtitle
+      <input id="subtitleText" type="text" value="CHASE THE LAST LIGHT" maxlength="60">
+    </label>
+    <label class="field">Title size
+      <input id="titleSize" type="range" min="40" max="160" step="4" value="96">
+    </label>
+    <label class="field">Caption place
+      <select id="captionPlace">
+        <option value="bottom" selected>Across the bottom</option>
+        <option value="top">Across the top</option>
+      </select>
+    </label>
+    <label class="field">Caption colour
+      <select id="captionColour">
+        <option value="#ffffff" selected>White</option>
+        <option value="#ffd23d">Sunbeam yellow</option>
+        <option value="#ff5da2">Neon pink</option>
+        <option value="#111111">Ink black</option>
+      </select>
+    </label>
+    <p class="status" id="statusLine">Loading the Boulevard sample…</p>
   </section>
-  <section class="stage">
-    <canvas id="cover" width="1080" height="1080" aria-label="The cover preview"></canvas>
-    <p class="hint">Click a panel to select it. Drag inside it to move the photo. Use the zoom slider to zoom.</p>
+
+  <section class="preview" aria-label="Live preview">
+    <h2>Live preview</h2>
+    <canvas id="stage" width="1920" height="1080"></canvas>
+    <p class="hint">What you see is what the PNG will be. Drag the sliders and watch it change.</p>
   </section>
 </main>
-<script type="module" src="./src/main.js"></script>
+
+<footer class="footnote">
+  <p>Original art made on your machine. No logos, artwork, or fonts from any game — lettering uses your system’s heavy sans-serif. Photos are read locally and never uploaded.</p>
+</footer>
+
+<script src="src/presets.js"></script>
+<script src="src/painter.js"></script>
+<script src="src/studio.js"></script>
 </body>
 </html>
