@@ -1,0 +1,173 @@
+/* Vice Dusk Cover Studio — editor chrome. Dark dusk theme, sunset accents. */
+* { box-sizing: border-box; }
+
+:root {
+  --ink: #f5efe6;
+  --muted: #c9b8a8;
+  --panel: #1c1420;
+  --panel-edge: #3a2436;
+  --sunset: #ff5da2;
+  --ember: #ff9a3d;
+  --gold: #ffd23d;
+  --teal: #00e5c7;
+  --field: #2a1c2e;
+}
+
+html { background: #120d16; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: linear-gradient(180deg, #160f1c 0%, #120d16 55%, #1d1020 100%);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.45;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 20px 24px 14px;
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--sunset), var(--ember), var(--gold)) 1;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 900;
+  background: linear-gradient(90deg, #ff8ac2, var(--ember) 55%, var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline { margin: 4px 0 0; color: var(--muted); max-width: 560px; }
+
+.top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.size-label { color: var(--muted); font-size: 13px; }
+
+button, select, input[type="text"] {
+  font: inherit;
+  color: var(--ink);
+  background: var(--field);
+  border: 1px solid var(--panel-edge);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+button { cursor: pointer; }
+button:hover { border-color: var(--sunset); }
+
+#downloadBtn {
+  background: linear-gradient(90deg, var(--sunset), var(--ember));
+  color: #1a0b12;
+  font-weight: 800;
+  border: none;
+  padding: 10px 16px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(340px, 430px) 1fr;
+  gap: 20px;
+  padding: 20px 24px;
+  align-items: start;
+}
+
+.controls h2 {
+  margin: 22px 0 6px;
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.controls h2:first-child { margin-top: 0; }
+.hint { color: var(--muted); font-size: 13px; margin: 4px 0 10px; }
+
+.photo-row, .sample-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.photo-row label {
+  flex: 1 1 100px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.photo-row input { display: block; width: 100%; margin-top: 4px; font-size: 12px; }
+.sample-row button { font-size: 13px; }
+
+.field { display: block; margin: 8px 0; font-size: 13px; color: var(--muted); }
+.field select, .field input { display: block; width: 100%; margin-top: 4px; }
+.field input[type="range"] { width: 100%; accent-color: var(--sunset); }
+
+.panel-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.panel-grid fieldset {
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--panel);
+}
+.panel-grid legend { color: var(--teal); font-size: 13px; font-weight: 700; }
+.panel-grid label { display: block; font-size: 13px; color: var(--muted); margin: 6px 0; }
+.panel-grid select, .panel-grid input { display: block; width: 100%; margin-top: 3px; }
+.panel-grid input[type="range"] { accent-color: var(--teal); }
+
+.grade-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.grade-btn { font-size: 13px; }
+.grade-btn.active {
+  background: linear-gradient(90deg, var(--sunset), var(--ember));
+  color: #1a0b12;
+  font-weight: 800;
+  border: none;
+}
+
+.status {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #241428;
+  border: 1px solid var(--panel-edge);
+  font-size: 13px;
+  color: var(--gold);
+}
+
+.preview h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+#stage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--panel-edge);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  background: #000;
+}
+
+.footnote {
+  padding: 8px 24px 24px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Cover-only view: used for clean cover screenshots (?view=cover). */
+body.cover-only .topbar,
+body.cover-only .controls,
+body.cover-only .preview h2,
+body.cover-only .preview .hint,
+body.cover-only .footnote { display: none; }
+body.cover-only .workspace { display: block; padding: 0; }
+body.cover-only .preview { padding: 0; }
+body.cover-only #stage { border: none; border-radius: 0; box-shadow: none; width: 100vw; height: 100vh; object-fit: contain; background: #000; }
+
+@media (max-width: 900px) {
+  .workspace { grid-template-columns: 1fr; }
+}
