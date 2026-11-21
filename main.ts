@@ -21,7 +21,6 @@ function copyTree(name: string): void {
 }
 
 function main(): void {
-  rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
   copyTree('app');
   copyTree('screenshots');
